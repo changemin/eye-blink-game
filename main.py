@@ -32,7 +32,7 @@ def main():
 
     # 무한 반복문으로 비디오의 프레임 하나씩 각각 처리
     while True:
-        _, frame = camera.read()
+        frame = camera.read()
         probability = detector.update(frame)
 
         if probability is not None:
