@@ -1,6 +1,8 @@
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
-from keras.layers import Input, Activation, Conv2D, Dense, Flatten, MaxPooling2D
+from tensorflow import keras
+
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Activation, Conv2D, Dense, Flatten, MaxPooling2D
 
 
 class Trainer:

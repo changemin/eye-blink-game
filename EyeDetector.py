@@ -3,7 +3,7 @@ from imutils import face_utils
 import cv2
 import time
 import dlib
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 
 
 class EyeDetector:
