@@ -17,7 +17,7 @@ class Camera:
 
     def read(self):
         self.camera.capture(self.rawCapture, format="bgr")
-        self.camera.truncate(0)
+        self.rawCapture.truncate(0)
         return self.rawCapture.array
 
         # _, frame = self.camera.read()
