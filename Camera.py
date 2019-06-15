@@ -7,7 +7,9 @@ from picamera import PiCamera
 class Camera:
     def __init__(self):
         self.camera = PiCamera()
-        self.rawCapture = PiRGBArray(self.camera)
+        self.camera.resolution = (640, 480)
+        self.camera.framerate = 32
+        self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
 
         # self.camera = cv2.VideoCapture(0)
 
