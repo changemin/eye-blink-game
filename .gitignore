@@ -1,2 +1,3 @@
-data/
+data/train/
+data/validate/
 train/
