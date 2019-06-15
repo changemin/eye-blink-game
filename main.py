@@ -22,7 +22,7 @@ def main():
 
     blink_consec_frames = args["frames"]
 
-    camera = Camera(False)
+    camera = Camera()
 
     # 1초 동안 실행 정지
     time.sleep(1.0)
