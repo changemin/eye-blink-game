@@ -3,6 +3,7 @@ from imutils import face_utils
 import cv2
 import time
 import dlib
+
 from tensorflow.keras.models import load_model
 
 
@@ -70,7 +71,7 @@ class EyeDetector:
             open_probability = (left_pred + right_pred) / 2.0
             print(open_probability)
 
-        return open_probability
+        return (left_eye_rect, right_eye_rect, open_probability)
 
 
 def crop_eye(img, eye_points):

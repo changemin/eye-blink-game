@@ -1,5 +1,3 @@
-from tensorflow import keras
-
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Input, Activation, Conv2D, Dense, Flatten, MaxPooling2D

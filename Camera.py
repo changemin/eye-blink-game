@@ -1,7 +1,7 @@
 import time
 import cv2
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
 
 
 class Camera:
@@ -22,3 +22,7 @@ class Camera:
 
         # _, frame = self.camera.read()
         # return frame
+
+    def release(self):
+        print("releasing...")
+        # self.camera.release()
