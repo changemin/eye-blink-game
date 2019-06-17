@@ -6,22 +6,22 @@ import cv2
 
 class Camera:
     def __init__(self):
-        self.camera = PiCamera()
-        self.camera.resolution = (640, 480)
-        self.camera.framerate = 32
-        self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
+        # self.camera = PiCamera()
+        # self.camera.resolution = (640, 480)
+        # self.camera.framerate = 32
+        # self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
 
-        # self.camera = cv2.VideoCapture(0)
+        self.camera = cv2.VideoCapture(0)
 
         time.sleep(1.0)
 
     def read(self):
-        self.camera.capture(self.rawCapture, format="bgr")
-        self.rawCapture.truncate(0)
-        return self.rawCapture.array
+        # self.camera.capture(self.rawCapture, format="bgr")
+        # self.rawCapture.truncate(0)
+        # return self.rawCapture.array
 
-        # _, frame = self.camera.read()
-        # return frame
+        _, frame = self.camera.read()
+        return frame
 
     def release(self):
         print("releasing...")

@@ -5,7 +5,7 @@ import imutils
 import time
 import dlib
 import cv2
-import serial
+# import serial
 
 from EyeDetector import EyeDetector
 from Camera import Camera
@@ -15,7 +15,7 @@ ap.add_argument("-p", "--shape-predictor", default="./data/shape_predictor_68_fa
                 help="path to facial landmark predictor")
 ap.add_argument("-f", "--frames", type=int, default=2,
                 help="the number of consecutive frames the eye must be below the threshold")
-ser = serial.Serial('/dev/ttyAMC0', 9600)
+# ser = serial.Serial('/dev/ttyAMC0', 9600)
 
 args = vars(ap.parse_args())
 
@@ -48,7 +48,7 @@ def main():
                     total_blink_count += 1
                     print("***************************** Blink! " +
                           str(total_blink_count))
-                    ser.write(str.encode('1'))
+                    # ser.write(str.encode('1'))
 
                 # 임시 카운트 리셋
                 temp_count = 0

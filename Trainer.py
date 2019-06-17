@@ -27,21 +27,17 @@ class Trainer:
                                                                  class_mode='binary')
 
         self.model = Sequential()
-        self.model.add(Conv2D(32, kernel_size=3, strides=1,
+        self.model.add(Conv2D(16, kernel_size=3,
                               padding='same', activation='relu', input_shape=(24, 24, 1)))
         self.model.add(MaxPooling2D(pool_size=2))
 
-        self.model.add(Conv2D(64, kernel_size=3, strides=1,
-                              padding='same', activation='relu', input_shape=(24, 24)))
-        self.model.add(MaxPooling2D(pool_size=2))
-
-        self.model.add(Conv2D(128, kernel_size=3, strides=1,
-                              padding='same', activation='relu', input_shape=(24, 24)))
-        self.model.add(MaxPooling2D(pool_size=2))
+        # self.model.add(Conv2D(64, kernel_size=3, strides=1,
+        #                       padding='same', activation='relu'))
+        # self.model.add(MaxPooling2D(pool_size=2))
 
         self.model.add(Flatten())
 
-        self.model.add(Dense(512))
+        self.model.add(Dense(128))
         self.model.add(Activation('relu'))
 
         self.model.add(Dense(1))
@@ -54,7 +50,7 @@ class Trainer:
 
     def train(self, path):
         self.model.fit_generator(self.train_set, steps_per_epoch=50,
-                                 epochs=50, validation_data=self.validate_set, validation_steps=5)
+                                 epochs=100, validation_data=self.validate_set, validation_steps=5)
         self.model.save(path)
 
 
