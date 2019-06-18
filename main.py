@@ -5,7 +5,7 @@ import imutils
 import time
 import dlib
 import cv2
-# import serial
+import serial
 
 from EyeDetector import EyeDetector
 from Camera import Camera
@@ -15,7 +15,7 @@ ap.add_argument("-p", "--shape-predictor", default="./data/shape_predictor_68_fa
                 help="path to facial landmark predictor")
 ap.add_argument("-f", "--frames", type=int, default=2,
                 help="the number of consecutive frames the eye must be below the threshold")
-# ser = serial.Serial('/dev/ttyAMC0', 9600)
+ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 args = vars(ap.parse_args())
 
@@ -29,6 +29,8 @@ def main():
 
     temp_count = 0
     total_blink_count = 0
+
+    input("PRESS ANY KEY TO CONTINUE")
 
     # 무한 반복문으로 비디오의 프레임 하나씩 각각 처리
     while True:
@@ -48,33 +50,33 @@ def main():
                     total_blink_count += 1
                     print("***************************** Blink! " +
                           str(total_blink_count))
-                    # ser.write(str.encode('1'))
+                    ser.write(str.encode('1'))
 
                 # 임시 카운트 리셋
                 temp_count = 0
 
             # 화면에 눈의 크기 표시
-            cv2.putText(frame, "Blink: {}".format(total_blink_count), (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-            cv2.putText(frame, "Open?: {:.2f}".format(probability[0][0]), (300, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            # cv2.putText(frame, "Blink: {}".format(total_blink_count), (10, 30),
+            #            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            # cv2.putText(frame, "Open?: {:.2f}".format(probability[0][0]), (300, 30),
+            #            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
-            cv2.rectangle(frame, (left_eye_rect[0], left_eye_rect[1]), (
-                left_eye_rect[2], left_eye_rect[3]), (0, 255, 0), 2)
-            cv2.rectangle(frame, (right_eye_rect[0], right_eye_rect[1]), (
-                right_eye_rect[2], right_eye_rect[3]), (0, 255, 0), 2)
+            # cv2.rectangle(frame, (left_eye_rect[0], left_eye_rect[1]), (
+            #    left_eye_rect[2], left_eye_rect[3]), (0, 255, 0), 2)
+            # cv2.rectangle(frame, (right_eye_rect[0], right_eye_rect[1]), (
+            #    right_eye_rect[2], right_eye_rect[3]), (0, 255, 0), 2)
 
         # 현재 프레임 보여줌
-        cv2.imshow("Frame", frame)
+        # cv2.imshow("Frame", frame)
 
-        key = cv2.waitKey(1) & 0xFF
+        # key = cv2.waitKey(1) & 0xFF
 
         # q 눌리면 프로그램 종료
-        if key == ord("q"):
+        # if key == ord("q"):
             # 띄운 윈도우와 비디오 스트리밍 종료
-            camera.release()
-            cv2.destroyAllWindows()
-            break
+            # camera.release()
+            # cv2.destroyAllWindows()
+            # break
 
 
 if __name__ == "__main__":
