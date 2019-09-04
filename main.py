@@ -5,26 +5,36 @@ import imutils
 import time
 import dlib
 import cv2
-import serial
+
+from serial import Serial
 
 from EyeDetector import EyeDetector
 from Camera import Camera
+
+raspiMode = False
+
+try:
+    from picamera.array import PiRGBArray
+    from picamera import PiCamera
+    isRaspi = True
+except ImportError:
+    import cv2
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--shape-predictor", default="./data/shape_predictor_68_face_landmarks.dat",
                 help="path to facial landmark predictor")
 ap.add_argument("-f", "--frames", type=int, default=2,
                 help="the number of consecutive frames the eye must be below the threshold")
-ser = serial.Serial('/dev/ttyUSB0', 115200)
+
+if raspiMode:
+    ser = Serial('/dev/ttyUSB0', 115200)
 
 args = vars(ap.parse_args())
 
 
 def main():
     detector = EyeDetector(args["shape_predictor"])
-
     blink_consec_frames = args["frames"]
-
     camera = Camera()
 
     temp_count = 0
@@ -50,33 +60,36 @@ def main():
                     total_blink_count += 1
                     print("***************************** Blink! " +
                           str(total_blink_count))
-                    ser.write(str.encode('1'))
+                    if raspiMode:
+                        ser.write(str.encode('1'))
 
                 # 임시 카운트 리셋
                 temp_count = 0
 
-            # 화면에 눈의 크기 표시
-            # cv2.putText(frame, "Blink: {}".format(total_blink_count), (10, 30),
-            #            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-            # cv2.putText(frame, "Open?: {:.2f}".format(probability[0][0]), (300, 30),
-            #            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            if not raspiMode:
+                # 화면에 눈의 크기 표시
+                cv2.putText(frame, "Blink: {}".format(total_blink_count), (10, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                cv2.putText(frame, "Open?: {:.2f}".format(probability[0][0]), (300, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
-            # cv2.rectangle(frame, (left_eye_rect[0], left_eye_rect[1]), (
-            #    left_eye_rect[2], left_eye_rect[3]), (0, 255, 0), 2)
-            # cv2.rectangle(frame, (right_eye_rect[0], right_eye_rect[1]), (
-            #    right_eye_rect[2], right_eye_rect[3]), (0, 255, 0), 2)
+                cv2.rectangle(frame, (left_eye_rect[0], left_eye_rect[1]), (
+                    left_eye_rect[2], left_eye_rect[3]), (0, 255, 0), 2)
+                cv2.rectangle(frame, (right_eye_rect[0], right_eye_rect[1]), (
+                    right_eye_rect[2], right_eye_rect[3]), (0, 255, 0), 2)
 
-        # 현재 프레임 보여줌
-        # cv2.imshow("Frame", frame)
+        if not raspiMode:
+            # 현재 프레임 보여줌
+            cv2.imshow("Frame", frame)
 
-        # key = cv2.waitKey(1) & 0xFF
+            key = cv2.waitKey(1) & 0xFF
 
-        # q 눌리면 프로그램 종료
-        # if key == ord("q"):
-            # 띄운 윈도우와 비디오 스트리밍 종료
-            # camera.release()
-            # cv2.destroyAllWindows()
-            # break
+            # q 눌리면 프로그램 종료
+            if key == ord("q"):
+                # 띄운 윈도우와 비디오 스트리밍 종료
+                camera.release()
+                cv2.destroyAllWindows()
+                break
 
 
 if __name__ == "__main__":

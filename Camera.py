@@ -1,28 +1,37 @@
 import time
-import cv2
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+
+raspiMode = False
+
+try:
+    from picamera.array import PiRGBArray
+    from picamera import PiCamera
+    isRaspi = True
+except ImportError:
+    import cv2
 
 
 class Camera:
     def __init__(self):
-        self.camera = PiCamera()
-        self.camera.resolution = (640, 480)
-        self.camera.framerate = 32
-        self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
-
-        # self.camera = cv2.VideoCapture(0)
+        if raspiMode:
+            self.camera = PiCamera()
+            self.camera.resolution = (640, 480)
+            self.camera.framerate = 32
+            self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
+        else:
+            self.camera = cv2.VideoCapture(0)
 
         time.sleep(1.0)
 
     def read(self):
-        self.camera.capture(self.rawCapture, format="bgr")
-        self.rawCapture.truncate(0)
-        return self.rawCapture.array
-
-        # _, frame = self.camera.read()
-        # return frame
+        if raspiMode:
+            self.camera.capture(self.rawCapture, format="bgr")
+            self.rawCapture.truncate(0)
+            return self.rawCapture.array
+        else:
+            _, frame = self.camera.read()
+            return frame
 
     def release(self):
         print("releasing...")
-        self.camera.release()
+        if raspiMode:
+            self.camera.release()
