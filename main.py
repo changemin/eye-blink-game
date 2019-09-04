@@ -26,6 +26,7 @@ ap.add_argument("-p", "--shape-predictor", default="./data/shape_predictor_68_fa
 ap.add_argument("-f", "--frames", type=int, default=2,
                 help="the number of consecutive frames the eye must be below the threshold")
 
+ser = None
 if raspiMode:
     ser = Serial('/dev/ttyUSB0', 115200)
 
