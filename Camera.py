@@ -18,7 +18,7 @@ class Camera:
             self.camera.framerate = 32
             self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
         else:
-            self.camera = cv2.VideoCapture(0)
+            self.camera = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 
         time.sleep(1.0)
 

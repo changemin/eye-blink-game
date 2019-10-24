@@ -6,12 +6,8 @@ import time
 import dlib
 import cv2
 
-from serial import Serial
-
 from EyeDetector import EyeDetector
 from Camera import Camera
-
-raspiMode = False
 
 try:
     from picamera.array import PiRGBArray
@@ -20,15 +16,12 @@ try:
 except ImportError:
     import cv2
 
+raspiMode = False
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--shape-predictor", default="./data/shape_predictor_68_face_landmarks.dat",
                 help="path to facial landmark predictor")
 ap.add_argument("-f", "--frames", type=int, default=2,
                 help="the number of consecutive frames the eye must be below the threshold")
-
-ser = None
-if raspiMode:
-    ser = Serial('/dev/ttyUSB0', 115200)
 
 args = vars(ap.parse_args())
 
@@ -40,8 +33,6 @@ def main():
 
     temp_count = 0
     total_blink_count = 0
-
-    input("PRESS ANY KEY TO CONTINUE")
 
     # 무한 반복문으로 비디오의 프레임 하나씩 각각 처리
     while True:
@@ -59,10 +50,8 @@ def main():
                 # 만약 일정 프레임 이상 눈을 감고 있었으면 눈 깜빡임 카운트 증가
                 if temp_count >= blink_consec_frames:
                     total_blink_count += 1
-                    print("***************************** Blink! " +
+                    print("*************Blink! " +
                           str(total_blink_count))
-                    if raspiMode:
-                        ser.write(str.encode('1'))
 
                 # 임시 카운트 리셋
                 temp_count = 0
@@ -71,17 +60,19 @@ def main():
                 # 화면에 눈의 크기 표시
                 cv2.putText(frame, "Blink: {}".format(total_blink_count), (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-                cv2.putText(frame, "Open?: {:.2f}".format(probability[0][0]), (300, 30),
+                cv2.putText(frame, "percent: {:.2f}".format(probability[0][0]), (300, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
                 cv2.rectangle(frame, (left_eye_rect[0], left_eye_rect[1]), (
-                    left_eye_rect[2], left_eye_rect[3]), (0, 255, 0), 2)
+                    left_eye_rect[2], left_eye_rect[3]), (0, 255, 0), 4)
                 cv2.rectangle(frame, (right_eye_rect[0], right_eye_rect[1]), (
-                    right_eye_rect[2], right_eye_rect[3]), (0, 255, 0), 2)
+                    right_eye_rect[2], right_eye_rect[3]), (0, 255, 0), 4)
 
         if not raspiMode:
             # 현재 프레임 보여줌
-            cv2.imshow("Frame", frame)
+            # cv2.namedWindow("Frame", cv2.WND_PROP_FULLSCREEN)
+            # cv2.setWindowProperty("Frame",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+            cv2.imshow("Frame",frame)
 
             key = cv2.waitKey(1) & 0xFF
 
