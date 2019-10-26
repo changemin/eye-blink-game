@@ -12,9 +12,9 @@ except ImportError:
 
 class Camera:
     def __init__(self):
-        self.camera = cv2.VideoCapture(0)
-
-        time.sleep(1.0)
+        self.camera = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+        # self.camera = cv2.VideoCapture(0)
+        # time.sleep(1.0)
 
     def read(self):
     
