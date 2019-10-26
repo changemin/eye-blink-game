@@ -9,7 +9,6 @@ from imutils.video import VideoStream
 from imutils import face_utils
 from Camera import Camera
 import numpy as np
-import argparse
 import imutils
 import time
 import dlib
@@ -32,12 +31,6 @@ def eye_aspect_ratio(eye):
 	return ear
  
 # construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-p", "--shape-predictor", default="./shape_predictor_68_face_landmarks.dat",
-	help="path to facial landmark predictor")
-ap.add_argument("-v", "--video", type=str, default="",
-	help="path to input video file")
-args = vars(ap.parse_args())
  
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
@@ -53,7 +46,7 @@ TOTAL = 0
 # the facial landmark predictor
 print("[INFO] loading facial landmark predictor...")
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(args["shape_predictor"])
+predictor = dlib.shape_predictor("./shape_predictor_68_face_landmarks.dat")
 
 # grab the indexes of the facial landmarks for the left and
 # right eye, respectively
@@ -61,12 +54,13 @@ predictor = dlib.shape_predictor(args["shape_predictor"])
 (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 
 # start the video stream thread
-# print("[INFO] starting video stream thread...")
-# vs = FileVideoStream(args["video"]).start()
-# fileStream = True
-# vs = VideoStream(src=0).start()
-# vs = VideoStream(usePiCamera=True).start()
-# fileStream = False
+
+CAMERA_WIDTH = 324
+CAMERA_HEIGHT = 576
+
+WINDOW_WIDTH = 1920
+WINDOW_HEGITH = 1080
+
 time.sleep(1.0)
 
 camera = Camera()
@@ -81,7 +75,7 @@ while True:
 	# it, and convert it to grayscale
 	# channels)
 	frame = camera.read()
-	frame = imutils.resize(frame, width=450)
+	frame = cv2.resize(frame, dsize=(CAMERA_HEIGHT, CAMERA_WIDTH))
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 	# detect faces in the grayscale frame
@@ -130,13 +124,14 @@ while True:
 
 		# draw the total number of blinks on the frame along with
 		# the computed eye aspect ratio for the frame
-		cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
+		cv2.putText(frame, "Score: {}".format(TOTAL*100), (10, 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-		cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
+		cv2.putText(frame, "Eye Size: {:.2f}".format(ear), (300, 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
  
 	# show the frame
-	cv2.imshow("Frame", frame)
+	resized_frame = cv2.resize(frame, dsize = (WINDOW_WIDTH, WINDOW_HEGITH))
+	cv2.imshow("Frame", resized_frame)
 	key = cv2.waitKey(1) & 0xFF
  
 	# if the `q` key was pressed, break from the loop

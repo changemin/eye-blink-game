@@ -1,13 +1,5 @@
 import time
-
-raspiMode = False
-
-try:
-    from picamera.array import PiRGBArray
-    from picamera import PiCamera
-    isRaspi = True
-except ImportError:
-    import cv2
+import cv2
 
 
 class Camera:
